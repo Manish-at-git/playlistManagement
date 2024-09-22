@@ -89,7 +89,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-between w-full gap-y-6 max-h-[70vh] overflow-y-auto">
+      <div className="flex flex-col justify-between w-full gap-y-6 max-h-[65vh] overflow-y-auto">
         {isLoading ? (
           <div className="w-full h-full flex justify-center items-center">
             <Loader />
@@ -136,6 +136,7 @@ const Home = () => {
         onClose={() => setOpenDelete(false)}
         onConfirm={handleConfirmDelete}
         refetch={refetch}
+        loading={deletePlaylist}
       />
     </div>
   );

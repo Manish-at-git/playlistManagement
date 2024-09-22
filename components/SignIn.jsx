@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { loginSlice } from "../redux/slices/stateSlices/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Loader from "../components/Loader"
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -128,7 +129,8 @@ const SignIn = () => {
                       paddingX: 3,
                     }}
                   >
-                    Login 
+                    {isLoading ? <Loader /> : "Login"}
+                     
                   </Button>
                   <p className="mt-4 text-center text-gray-500">
                     Don&apos;t have an account?{" "}

@@ -37,7 +37,7 @@ const PlaylistDetail = () => {
     <div className="w-full">
       <div className="flex gap-5 items-center my-8">
         <ArrowBackIcon
-          className={`text-[#9410AB] cursor-pointer`}
+          className={`text-[#9410AB] cursor-pointer h-[20px]`}
           onClick={() => router.back()}
         />
         <Image src={require("../assets/images/headphone.svg")} />
@@ -72,6 +72,7 @@ const PlaylistDetail = () => {
         open={openDelete}
         onClose={() => setOpenDelete(false)}
         onConfirm={handleConfirmDelete}
+        loading={isLoading}
       />
     </div>
   );

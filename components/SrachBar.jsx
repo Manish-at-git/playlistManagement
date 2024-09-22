@@ -2,6 +2,8 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import SearchResult from "./SearchResult";
 import { useFetchSongsQuery } from "../redux/slices/rtkSlices/playlistSlice";
+import CancelIcon from "@mui/icons-material/Cancel";
+import Loader from "./Loader"
 
 const results = [
   {
@@ -27,9 +29,20 @@ const results = [
   },
 ];
 
-const SearchBar = ({refetch}) => {
+const SearchBar = ({ refetch }) => {
   const [search, setSearch] = useState("");
   const [debouncedText, setDebouncedText] = useState(search || "");
+
+
+  const {
+    data,
+    error,
+    isLoading,
+    refetch: refetchSongs,
+  } = useFetchSongsQuery(
+    { text: debouncedText },
+    { skip: debouncedText == "" }
+  );
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -40,7 +53,8 @@ const SearchBar = ({refetch}) => {
     };
   }, [search]);
 
-  const { data, error, isLoading, refetch:refetchSongs } = useFetchSongsQuery({text: debouncedText}, {skip:debouncedText == ""});
+
+  console.log(isLoading, "isLoading")
 
   return (
     <div className="bg-gray-800 text-white rounded-full px-4 py-2 md:px-6 md:py-4 flex-1 relative">
@@ -48,10 +62,19 @@ const SearchBar = ({refetch}) => {
         <Image src={require("../assets/images/search.svg")} />
         <input
           onChange={(e) => setSearch(e.target.value)}
+          value={search}
           type="text"
           className="bg-transparent outline-none text-sm md:text-lg pl-4 w-full"
           placeholder="Search Music, Artist, Genre"
         />
+        {search ? (
+          <CancelIcon
+            onClick={() => setSearch("")}
+            className="cursor-pointer"
+          />
+        ) : (
+          <></>
+        )}
       </div>
       <div
         className={`bg-[#1d1d1d] rounded-lg absolute overflow-hidden duration-300 ease-in-out left-0 right-0 top-16 z-50 ${
@@ -66,18 +89,26 @@ const SearchBar = ({refetch}) => {
             </div>
           </div>
           <div className="flex flex-col justify-between w-full gap-y-6 overflow-scroll max-h-[500px]">
-            {data?.map((item, index) => {
-              return (
-                <SearchResult
-                  key={index}
-                  // setSelected={setSelected}
-                  refetch={() => refetch()}
-                  item={item}
-                  text={search}
-                  index={index}
-                />
-              );
-            })}
+            {isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <Loader />
+              </div>
+            ) : (
+              <>
+                {data?.map((item, index) => {
+                  return (
+                    <SearchResult
+                      key={index}
+                      // setSelected={setSelected}
+                      refetch={() => refetch()}
+                      item={item}
+                      text={search}
+                      index={index}
+                    />
+                  );
+                })}
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import {
   useAddPlaylistMutation,
   useUpdatePlaylistMutation,
 } from "../redux/slices/rtkSlices/playlistSlice";
+import Loader from "../components/Loader"
 
 const style = {
   position: "absolute",
@@ -107,7 +108,8 @@ const AddPlaylist = ({ handleClose, open, data = null, refetch }) => {
                     padding: "10px 20px",
                   }}
                 >
-                  {data == null ? "Add" : "Edit"} Playlist
+                  
+                  {isLoading || pdateLoading ? <Loader size={20} color="white" /> : data == null ? "Add Playlist" : "Edit Playlist"} 
                 </Button>
               </div>
             </Form>

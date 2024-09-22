@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useRegisterMutation } from "../redux/slices/rtkSlices/authSlice";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
+import Loader from "../components/Loader"
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -125,7 +126,7 @@ const SignIn = () => {
                       paddingX: 3,
                     }}
                   >
-                    Register
+                   {isLoading ? <Loader /> : "Register"}
                   </Button>
                   <p className="mt-4 text-center text-gray-500">
                     Already have an account?{" "}

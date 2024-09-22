@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Box, Typography, Button } from "@mui/material";
-
-const ConfirmationModal = ({ open, onClose, onConfirm, message }) => {
+import Loader from "../components/Loader"
+const ConfirmationModal = ({ open, onClose, onConfirm, message, loading }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -33,7 +33,7 @@ const ConfirmationModal = ({ open, onClose, onConfirm, message }) => {
               padding: "10px 20px",
             }}
           >
-            Confirm
+            {loading ? "Confirm" : <Loader />}
           </Button>
           <Button
             type="button"
