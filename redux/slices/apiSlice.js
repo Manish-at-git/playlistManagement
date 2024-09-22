@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "api", // optional
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://192.168.29.141:4000",
+    baseUrl: "https://propeliusbackend.onrender.com",
     prepareHeaders(headers) {
       headers.set("accept", "application/json ");
       let token = null;
