@@ -48,7 +48,7 @@ const AddPlaylist = ({ handleClose, open, data = null, refetch }) => {
   };
 
   return (
-    <Modal open={open} onClose={handleClose} sx={{ borderRadius: "10px" }}>
+    <Modal open={open} onClose={handleClose} sx={{ borderRadius: "10px", width:"100% !important" }}>
       <Box sx={style}>
         <Typography
           id="modal-title"

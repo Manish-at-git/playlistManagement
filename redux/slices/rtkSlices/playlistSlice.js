@@ -41,14 +41,14 @@ export const playlistSlice = apiSlice.injectEndpoints({
     }),
     deleteSongsToPlaylist: builder.mutation({
       query: (data) => ({
-        url: `/api/deleteSongInPlayList/${data?.id}`,
+        url: `/api/deleteSongFromPlaylist/${data?.id}/songs/${data?.songId}`,
         method: "DELETE",
         // body: data?.payload,
       }),
       invalidatesTags: ["DeleteSongsToPlaylist"],
     }),
     fetchSongs: builder.query({
-      query: (data) => `/api/getSongs?text=${data?.text}`,
+      query: (data) => `/api/search?q=${data?.text}`,
       method: "GET",
       providesTags: ["GetSongs"],
     }),

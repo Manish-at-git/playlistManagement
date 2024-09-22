@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { loginSlice } from "../redux/slices/stateSlices/authSlice";
+import { getToken } from "../utils";
 
 const AuthWrapper = ({ children }) => {
   const dispatch = useDispatch();
@@ -49,9 +50,12 @@ const AuthWrapper = ({ children }) => {
     return children;
   }
 
+
+  
+
   return (
     <div className="bg-[#111111] h-screen">
-      <div className="mx-auto w-[70%]">
+      <div className="mx-auto w-[85%] md:w-[70%]">
         <div className="flex w-full">{children}</div>
       </div>
     </div>

@@ -19,16 +19,17 @@ const PlaylistDetail = () => {
     error,
     isLoading,
     refetch,
-  } = useFetchPlaylistsQuery({});
+  } = useFetchPlaylistsQuery();
   const [deleteSongsFromPlaylist, { isLoading: isLoadingDelete, error: errorDelete }] =
   useDeleteSongsToPlaylistMutation();
 
   const { playlistDetail, id } = router.query;
 
-  const currentData = data?.filter((item) => item?._id == id);
+  const currentData = refetchedData?.filter((item) => item?._id == id);
 
-  const handleConfirmDelete = () => {
-    deleteSongsFromPlaylist({ playListId: d , songId: openDeleteId });
+  const handleConfirmDelete = async () => {
+    await deleteSongsFromPlaylist({ id: id , songId: openDeleteId });
+    await refetch()
     setOpenDelete(false);
   };
 
@@ -37,11 +38,11 @@ const PlaylistDetail = () => {
       <div className="flex gap-5 items-center my-8">
         <ArrowBackIcon
           className={`text-[#9410AB] cursor-pointer`}
-          //   size="100px"
           onClick={() => router.back()}
         />
         <Image src={require("../assets/images/headphone.svg")} />
-        <div className="text-[30px] text-white font-[600]">
+        <div className="text-[16px] md:text-[30px] text-white font-[600]">
+        {/* <div className="text-[30px] text-white font-[600]"> */}
           Your Songs in Playlist{" "}
           <span className="gradient-text">{playlistDetail}</span>
         </div>
@@ -60,6 +61,7 @@ const PlaylistDetail = () => {
               }}
               selected={selected}
               index={index}
+              refetch={refetch}
             />
           );
         })}

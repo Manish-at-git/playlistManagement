@@ -47,9 +47,9 @@ const Home = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await deletePlaylist({ id: openDeleteId }).unwrap(); 
-      setOpenDelete(false); 
-      refetch(); 
+      await deletePlaylist({ id: openDeleteId }).unwrap();
+      setOpenDelete(false);
+      refetch();
     } catch (error) {
       console.error("Failed to delete playlist:", error);
     }
@@ -57,27 +57,34 @@ const Home = () => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col md:flex-row gap-10 justify-between my-12">
+      <div className="flex justify-between gap-4  my-6 w-full min-[460px]:w-auto">
+        <div className="hidden min-[460px]:block text-[#6358DC] text-[16] md:text-[36px] font-[900]">
+          Music App
+        </div>
+        <div className="flex gap-2 justify-between w-full min-[460px]:w-auto">
+          <Button
+            type="button"
+            className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-6"
+            onClick={() => handleClickOpen()}
+          >
+            Add Playlist
+          </Button>
+          <Button
+            type="button"
+            className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-8"
+            onClick={() => handleLogout()}
+          >
+            Logout
+          </Button>
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row gap-10 justify-between mb-12">
         <SearchBar />
-        <div className="flex justify-end gap-4"><Button
-          type="button"
-          className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-6"
-          onClick={() => handleClickOpen()}
-        >
-          Add Playlist
-        </Button>
-        <Button
-          type="button"
-          className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-8"
-          onClick={() => handleLogout()}
-        >
-          Logout
-        </Button></div>
       </div>
       <div>
         <div className="flex gap-5 items-center my-8">
           <Image src={require("../assets/images/music.svg")} />
-          <div className="text-[30px] text-white font-[600]">
+          <div className="text-[16px] md:text-[30px] text-white font-[600]">
             Your Playlists
           </div>
         </div>
@@ -90,7 +97,7 @@ const Home = () => {
         ) : (
           data?.map((item, index) => (
             <PlaylistCard
-            key={index}
+              key={index}
               item={item}
               setSelected={() => {
                 setSelected(item?._id);

@@ -21,3 +21,14 @@ body {
   background-clip: text; /* For non-WebKit browsers */
   color: transparent; /* Ensures text color doesn't interfere */
 }
+
+.css-qoytyp {
+  width: 90% !important;
+  border-radius: 10px;
+}
+
+@media (min-width: 600px) {
+  .css-qoytyp {
+    width: 400px !important;
+  }
+}
