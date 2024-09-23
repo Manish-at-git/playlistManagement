@@ -2,10 +2,14 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import SongsRow from "./../components/SongsCard";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ConfirmationModal from "../components/ConfirmationModal";
-import { useDeleteSongsToPlaylistMutation, useFetchPlaylistsQuery } from "../redux/slices/rtkSlices/playlistSlice";
+import {
+  useDeleteSongsToPlaylistMutation,
+  useFetchPlaylistsQuery,
+} from "../redux/slices/rtkSlices/playlistSlice";
+import Card from "../components/Card";
+import Loader from "../components/Loader"
 
 const PlaylistDetail = () => {
   const router = useRouter();
@@ -20,18 +24,30 @@ const PlaylistDetail = () => {
     isLoading,
     refetch,
   } = useFetchPlaylistsQuery();
-  const [deleteSongsFromPlaylist, { isLoading: isLoadingDelete, error: errorDelete }] =
-  useDeleteSongsToPlaylistMutation();
+  const [
+    deleteSongsFromPlaylist,
+    { isLoading: isLoadingDelete, error: errorDelete },
+  ] = useDeleteSongsToPlaylistMutation();
 
   const { playlistDetail, id } = router.query;
 
-  const currentData = refetchedData?.filter((item) => item?._id == id);
+  const currentData = refetchedData?.data?.filter((item) => item?._id == id);
 
   const handleConfirmDelete = async () => {
-    await deleteSongsFromPlaylist({ id: id , songId: openDeleteId });
-    await refetch()
+    await deleteSongsFromPlaylist({ id: id, songId: openDeleteId });
+    await refetch();
     setOpenDelete(false);
   };
+
+  const trackData = currentData?.map((item) => {
+    return item?.songs?.map((item) => {
+      return {
+        ...item,
+        image: require("../assets/images/musicAlbum2.jpeg")?.default?.src,
+      };
+    });
+  });
+
 
   return (
     <div className="w-full">
@@ -42,29 +58,36 @@ const PlaylistDetail = () => {
         />
         <Image src={require("../assets/images/headphone.svg")} />
         <div className="text-[16px] md:text-[30px] text-white font-[600]">
-        {/* <div className="text-[30px] text-white font-[600]"> */}
+          {/* <div className="text-[30px] text-white font-[600]"> */}
           Your Songs in Playlist{" "}
           <span className="gradient-text">{playlistDetail}</span>
         </div>
       </div>
       <div className="flex flex-col justify-between w-full gap-y-6">
-        {currentData?.[0]?.songs?.map((item, index) => {
-          console.log(item, "fedvsdvsdvsdvdv");
-          return (
-            <SongsRow
-              key={index}
-              item={item}
-              setSelected={() => setSelected(item?._id)}
-              setDeleteData={() => {
-                setOpenDeleteId(item?._id);
-                setOpenDelete(true);
-              }}
-              selected={selected}
-              index={index}
-              refetch={refetch}
-            />
-          );
-        })}
+        <div className="flex flex-wrap gap-14">
+          {isLoading ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Loader />
+            </div>
+          ) : (
+            trackData?.[0]?.map((item, index) => {
+              console.log(item, "item")
+              return (
+                <Card
+                key={index}
+                title={item?.title}
+                description={item?.artist}
+                album={item?.album}
+                image={item?.image}
+                setDeleteData={() => {
+                  setOpenDeleteId(item?._id);
+                  setOpenDelete(true);
+                }}
+              />
+              );
+            })
+          )}
+        </div>
       </div>
       <ConfirmationModal
         message="Are you sure you want to delete this playlist"

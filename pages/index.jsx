@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import PlaylistCard from "../components/PlaylistCard";
-import SearchBar from "../components/SrachBar";
+import SearchBar from "../components/SearchBar";
 import Image from "next/image";
 import { Button } from "@mui/material";
 import AddPlaylist from "../components/AddPlaylist";
 import {
   useDeletePlaylistMutation,
   useFetchPlaylistsQuery,
+  useFetchSpotifyPlaylistQuery,
 } from "../redux/slices/rtkSlices/playlistSlice";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import { playLists } from "../redux/slices/stateSlices/playlistSlice";
 import { logout } from "../redux/slices/stateSlices/authSlice";
 import Loader from "../components/Loader";
 import ConfirmationModal from "./../components/ConfirmationModal";
+import Card from "../components/Card";
 
 const Home = () => {
   const router = useRouter();
@@ -28,9 +29,19 @@ const Home = () => {
   const [deletePlaylist, { isLoading: isLoadingDelete, error: errorDelete }] =
     useDeletePlaylistMutation();
 
+  const playlistsData = data?.data?.map((item) => {
+    console.log(item?.imageNumber, "imageNumberimageNumberimageNumber");
+    return {
+      ...item,
+      image: require("../assets/images/musicAlbum.jpg")?.default?.src,
+    };
+  });
+
+  console.log(playlistsData, "playlistsData");
+
   useEffect(() => {
-    dispatch(playLists(data));
-  }, [data?.length]);
+    dispatch(playLists(data?.data));
+  }, [data?.data?.length]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,7 +65,6 @@ const Home = () => {
       console.error("Failed to delete playlist:", error);
     }
   };
-
   return (
     <div className="w-full">
       <div className="flex justify-between gap-4  my-6 w-full min-[460px]:w-auto">
@@ -62,6 +72,28 @@ const Home = () => {
           Music App
         </div>
         <div className="flex gap-2 justify-between w-full min-[460px]:w-auto">
+          <div className="flex items-center">
+            <Button
+              type="button"
+              className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-8"
+              onClick={() => handleLogout()}
+            >
+              Logout
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row gap-10 justify-between mb-12">
+        <SearchBar />
+      </div>
+      <div className="flex justify-between">
+        <div className="flex gap-5 items-center my-8">
+          <Image src={require("../assets/images/music.svg")} />
+          <div className="text-[16px] md:text-[30px] text-white font-[600]">
+            Your Playlists
+          </div>
+        </div>
+        <div className="flex items-center">
           <Button
             type="button"
             className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-6"
@@ -69,43 +101,21 @@ const Home = () => {
           >
             Add Playlist
           </Button>
-          <Button
-            type="button"
-            className="bg-gradient-to-r from-pink-600 to-purple-600 !text-white !rounded-full !text-[12px] md:!text-[14px] !px-3 md:!py-2 md:!px-8"
-            onClick={() => handleLogout()}
-          >
-            Logout
-          </Button>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row gap-10 justify-between mb-12">
-        <SearchBar />
-      </div>
-      <div>
-        <div className="flex gap-5 items-center my-8">
-          <Image src={require("../assets/images/music.svg")} />
-          <div className="text-[16px] md:text-[30px] text-white font-[600]">
-            Your Playlists
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col justify-between w-full gap-y-6 max-h-[65vh] overflow-y-auto">
+      {/* <div className="flex w-full gap-y-6 max-h-[65vh] overflow-y-auto"> */}
+      <div className="flex flex-wrap gap-14">
         {isLoading ? (
           <div className="w-full h-full flex justify-center items-center">
             <Loader />
           </div>
         ) : (
-          data?.map((item, index) => (
-            <PlaylistCard
+          playlistsData?.map((item, index) => (
+            <Card
               key={index}
-              item={item}
-              setSelected={() => {
-                setSelected(item?._id);
-                router.push({
-                  pathname: `/${item?.name}`,
-                  query: { id: item?._id },
-                });
-              }}
+              title={item?.name}
+              description={item?.description}
+              image={item?.image}
               setEditData={() => {
                 setEditData(item);
                 handleClickOpen();
@@ -114,8 +124,12 @@ const Home = () => {
                 setOpenDeleteId(item?._id);
                 setOpenDelete(true);
               }}
-              selected={selected}
-              index={index}
+              click={() => {
+                router.push({
+                  pathname: `/${item?.name}`,
+                  query: { id: item?._id },
+                });
+              }}
             />
           ))
         )}
@@ -136,10 +150,48 @@ const Home = () => {
         onClose={() => setOpenDelete(false)}
         onConfirm={handleConfirmDelete}
         refetch={refetch}
-        loading={deletePlaylist}
+        loading={isLoadingDelete}
       />
+      <Suggestions />
     </div>
   );
 };
 
 export default Home;
+
+const Suggestions = () => {
+  const { data, error, isLoading, refetch } = useFetchSpotifyPlaylistQuery();
+
+  return (
+    <div>
+      <div>
+        <div className="flex gap-5 items-center my-8">
+          <Image src={require("../assets/images/music.svg")} />
+          <div className="text-[16px] md:text-[30px] text-white font-[600]">
+            Playlists Recommended for you
+          </div>
+        </div>
+      </div>
+      {isLoading ? (
+        <div className="w-full h-full flex justify-center items-center">
+          <Loader />
+        </div>
+      ) : (
+        <div className="flex flex-wrap justify-between gap-3">
+          {data?.tracks
+            ?.filter((item) => item?.image)
+            ?.map((item, index) => {
+              return (
+                <Card
+                  key={index}
+                  title={item?.title}
+                  description={item?.description}
+                  image={item?.image}
+                />
+              );
+            })}
+        </div>
+      )}
+    </div>
+  );
+};

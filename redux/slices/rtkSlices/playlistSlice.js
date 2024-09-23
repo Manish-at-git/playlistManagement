@@ -3,7 +3,7 @@ import { apiSlice } from "../apiSlice";
 export const playlistSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     fetchPlaylists: builder.query({
-      query: () => "/api/getPlaylists",
+      query: () => "/api/getAllPlaylists",
       method: "GET",
       providesTags: ["GetPlaylists"],
     }),
@@ -17,15 +17,15 @@ export const playlistSlice = apiSlice.injectEndpoints({
     }),
     updatePlaylist: builder.mutation({
       query: (data) => ({
-        url: `/api/updatePlaylist/${data?.id}`,
-        method: "PUT",
+        url: `/api/playlists/${data?.id}`,
+        method: "PATCH",
         body: data?.body,
       }),
       invalidatesTags: ["UpdatePlaylist"],
     }),
     deletePlaylist: builder.mutation({
       query: (data) => ({
-        url: `/api/deletePlayList/${data?.id}`,
+        url: `/api/playlists/${data?.id}`,
         method: "DELETE",
         // body: {},
       }),
@@ -33,25 +33,31 @@ export const playlistSlice = apiSlice.injectEndpoints({
     }),
     addSongsToPlaylist: builder.mutation({
       query: (data) => ({
-        url: `/api/addSongInPlayList/${data?.id}`,
-        method: "PUT",
+        url: `/api/addSongToPlaylist/${data?.id}`,
+        method: "POST",
         body: data?.payload,
       }),
       invalidatesTags: ["AddSongsToPlaylist"],
     }),
     deleteSongsToPlaylist: builder.mutation({
       query: (data) => ({
-        url: `/api/deleteSongFromPlaylist/${data?.id}/songs/${data?.songId}`,
+        url: `/api/playlists/${data?.id}/${data?.songId}`,
         method: "DELETE",
         // body: data?.payload,
       }),
       invalidatesTags: ["DeleteSongsToPlaylist"],
     }),
     fetchSongs: builder.query({
-      query: (data) => `/api/search?q=${data?.text}`,
+      query: (data) => `/api/search?searchQuery=${data?.text}`,
       method: "GET",
       providesTags: ["GetSongs"],
     }),
+    fetchSpotifyPlaylist: builder.query({
+      query: (data) => `/api/fetchPlaylist?searchQuery=top`,
+      method: "GET",
+      providesTags: ["GetSongs"],
+    }),
+    
   }),
 });
 
@@ -62,5 +68,6 @@ export const {
   useDeletePlaylistMutation,
   useDeleteSongsToPlaylistMutation,
   useUpdatePlaylistMutation,
-  useFetchSongsQuery
+  useFetchSongsQuery,
+  useFetchSpotifyPlaylistQuery
 } = playlistSlice;

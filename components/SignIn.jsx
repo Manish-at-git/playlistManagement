@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextField, Button, Snackbar } from "@mui/material";
 import * as Yup from "yup";
@@ -40,21 +40,23 @@ const SignIn = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [login, { isLoading, error }] = useLoginMutation();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
+      debugger
       const result = await login({
         email: values.email,
         password: values.password,
       }).unwrap();
 
+      console.log({ ...result.userDetails, token: result.token }, "{ ...result.userDetails, token: result.token }")
       localStorage.setItem(
         "user",
-        JSON.stringify({ ...result.userDetails, token: result.accessToken })
+        JSON.stringify({ ...result.userDetails, token: result.token })
       );
       dispatch(
-        loginSlice({ token: result.accessToken, user: result.userDetails })
+        loginSlice({ token: result.token, user: result.userDetails })
       );
       router.push("/");
     } catch (error) {

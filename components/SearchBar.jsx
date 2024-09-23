@@ -65,7 +65,7 @@ const SearchBar = ({ refetch }) => {
           value={search}
           type="text"
           className="bg-transparent outline-none text-sm md:text-lg pl-4 w-full"
-          placeholder="Search Music, Artist, Genre"
+          placeholder="What do you want to play?"
         />
         {search ? (
           <CancelIcon
@@ -88,14 +88,14 @@ const SearchBar = ({ refetch }) => {
               Search Results
             </div>
           </div>
-          <div className="flex flex-col justify-between w-full gap-y-6 overflow-scroll max-h-[500px]">
+          <div className="flex justify-between w-full gap-y-6 overflow-scroll max-h-[500px]">
             {isLoading ? (
               <div className="w-full h-full flex justify-center items-center">
                 <Loader />
               </div>
             ) : (
               <>
-                {data?.map((item, index) => {
+                {data?.tracks?.map((item, index) => {
                   return (
                     <SearchResult
                       key={index}

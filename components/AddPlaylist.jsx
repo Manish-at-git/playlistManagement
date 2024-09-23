@@ -22,7 +22,6 @@ const style = {
 };
 
 const AddPlaylist = ({ handleClose, open, data = null, refetch }) => {
-  console.log(data?._id, "data")
   const [addPlaylist, { isLoading, error }] = useAddPlaylistMutation();
   const [updatePlaylist, { isLoading: pdateLoading, error: updateError }] =
     useUpdatePlaylistMutation();

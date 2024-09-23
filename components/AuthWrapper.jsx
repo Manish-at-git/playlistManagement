@@ -54,7 +54,7 @@ const AuthWrapper = ({ children }) => {
   
 
   return (
-    <div className="bg-[#111111] h-screen">
+    <div className="bg-[#111111] min-h-screen">
       <div className="mx-auto w-[85%] md:w-[70%]">
         <div className="flex w-full">{children}</div>
       </div>

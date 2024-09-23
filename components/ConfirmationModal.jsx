@@ -33,7 +33,7 @@ const ConfirmationModal = ({ open, onClose, onConfirm, message, loading }) => {
               padding: "10px 20px",
             }}
           >
-            {loading ? "Confirm" : <Loader />}
+            {loading ? <Loader /> :  "Confirm" }
           </Button>
           <Button
             type="button"
